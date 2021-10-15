@@ -105,7 +105,7 @@ public class PlayerController {
         } catch (PlayerNotFountException e) {
             return ResponseEntity.status(404).build();
         }catch (Exception e){
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(400).build();
         }
     }
 }

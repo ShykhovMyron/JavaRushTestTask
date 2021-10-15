@@ -109,7 +109,7 @@ public class PlayerService {
                 (player.getTitle().isEmpty() || player.getTitle().length() > 30) ||
                 (player.getRace() == null) ||
                 (player.getProfession() == null) ||
-                (player.getBirthday() == null || player.getBirthday() < 0 || (new Date(player.getBirthday()).getYear() < 2000 || new Date(player.getBirthday()).getYear() > 3000)) ||
+                (player.getBirthday() == null || player.getBirthday() < 0) ||
                 (player.getExperience()) == null || player.getExperience() < 0 || player.getExperience() > 10_000_000)
             throw new Exception();
 
@@ -155,37 +155,41 @@ public class PlayerService {
     }
 
     public PlayerEntity updatePlayer(UpdatePlayer player, String id) throws Exception {
-
         PlayerEntity entity = getPlayer(id);
-        if (player != null) {
-            if (!player.getName().replaceAll(" ", "").isEmpty()) {
-                if (player.getName().length() > 12) throw new Exception();
-                entity.setName(player.getName());
-            }
-            if (!player.getTitle().replaceAll(" ", "").isEmpty()) {
-                if (player.getName().length() > 30) throw new Exception();
-                entity.setTitle(player.getTitle());
-            }
-            if (player.getRace() != null) entity.setRace(player.getRace());
-            if (player.getProfession() != null) entity.setProfession(player.getProfession());
-            if (player.getBirthday() != null) {
-                if (player.getBirthday() < 0 ||
-                        (new Date(player.getBirthday()).getYear() < 2000 || new Date(player.getBirthday()).getYear() > 3000))
-                    throw new Exception();
-                entity.setBirthday(new Date(player.getBirthday()));
-            }
-            if (player.getBanned() != null) entity.setBanned(player.getBanned());
-            if (player.getExperience() != null) {
-                if (player.getExperience() < 0 || player.getExperience() > 10_000_000) throw new Exception();
-                entity.setExperience(player.getExperience());
+        if ((!player.getName().isEmpty() && player.getName().length() > 12) ||
+                (!player.getTitle().isEmpty() && player.getTitle().length() > 30) ||
+                (player.getBirthday() != null && player.getBirthday() < 0) ||
+                (player.getExperience() != null && (player.getExperience() < 0 || player.getExperience() > 10_000_000)))
+            throw new Exception();
 
-                Integer level = (int) ((Math.sqrt(2500 + 200 * player.getExperience()) - 50) / 100);
-                entity.setLevel(level);
-
-                Integer untilNextLevel = 50 * (level + 1) * (level + 2) - player.getExperience();
-                entity.setUntilNextLevel(untilNextLevel);
-            }
+        if (!player.getName().isEmpty()) {
+            entity.setName(player.getName());
         }
+        if (!player.getTitle().isEmpty()) {
+            entity.setTitle(player.getTitle());
+        }
+        if (player.getRace() != null) {
+            entity.setRace(player.getRace());
+        }
+        if (player.getProfession() != null) {
+            entity.setProfession(player.getProfession());
+        }
+        if (player.getBirthday() != null) {
+            entity.setBirthday(new Date(player.getBirthday()));
+        }
+        if (player.getBanned() != null) {
+            entity.setBanned(player.getBanned());
+        }
+        if (player.getExperience() != null) {
+            entity.setExperience(player.getExperience());
+
+            Integer level = (int) ((Math.sqrt(2500 + 200 * player.getExperience()) - 50) / 100);
+            entity.setLevel(level);
+
+            Integer untilNextLevel = 50 * (level + 1) * (level + 2) - player.getExperience();
+            entity.setUntilNextLevel(untilNextLevel);
+        }
+
         return playerRepo.save(entity);
     }
 }
