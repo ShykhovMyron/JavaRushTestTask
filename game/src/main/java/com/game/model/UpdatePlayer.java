@@ -5,13 +5,16 @@ import com.game.entity.Race;
 
 
 public class UpdatePlayer {
-    String name;
-    String title;
-    Profession profession;
-    Race race;
-    Integer experience;
-    Long birthday;
-    Boolean banned;
+    private String name;
+    private String title;
+    private Profession profession;
+    private Race race;
+    private Integer experience;
+    private Long birthday;
+    private Boolean banned ;
+
+    public UpdatePlayer() {
+    }
 
     public String getName() {
         return name;

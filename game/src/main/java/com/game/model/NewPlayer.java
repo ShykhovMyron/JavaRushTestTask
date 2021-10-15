@@ -5,13 +5,13 @@ import com.game.entity.Race;
 
 
 public class NewPlayer {
-    String name;
-    String title;
-    Profession profession;
-    Race race;
-    Integer experience;
-    Long birthday;
-    Boolean banned = false;
+    private String name;
+    private String title;
+    private Profession profession;
+    private Race race;
+    private Integer experience;
+    private Long birthday;
+    private Boolean banned = false;
 
     public NewPlayer() {
     }

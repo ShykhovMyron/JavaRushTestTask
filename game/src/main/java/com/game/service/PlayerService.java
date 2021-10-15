@@ -107,10 +107,9 @@ public class PlayerService {
                 (player.getTitle() == null || player.getTitle().length() > 30 || player.getTitle().equals("")) ||
                 (player.getRace() == null) ||
                 (player.getProfession() == null) ||
-                (player.getBirthday() == null || player.getBirthday() < 0 || player.getBirthday() > 10_000_000) ||
-                (player.getExperience()) == null || player.getExperience() < 0)
+                (player.getBirthday() == null || player.getBirthday() < 0) ||
+                (player.getExperience()) == null || player.getExperience() < 0 || player.getExperience() > 10_000_000)
             throw new Exception();
-
 
         PlayerEntity entity = new PlayerEntity();
         entity.setName(player.getName());
@@ -138,6 +137,7 @@ public class PlayerService {
         } catch (Exception e) {
             throw new IdNotValidException();
         }
+        if (id.equals("")) throw new IdNotValidException();
         if (value <= 0) throw new IdNotValidException();
         try {
             entity = playerRepo.findById(value).get();
@@ -155,12 +155,10 @@ public class PlayerService {
     public PlayerEntity updatePlayer(UpdatePlayer player, String id) throws Exception {
         PlayerEntity entity = getPlayer(id);
 
-        if ((player.getName() == null || player.getName().length() > 12 || player.getName().equals("")) ||
-                (player.getTitle() == null || player.getTitle().length() > 30 || player.getTitle().equals("")) ||
-                (player.getRace() == null) ||
-                (player.getProfession() == null) ||
-                (player.getBirthday() == null || player.getBirthday() < 0 || player.getBirthday() > 10_000_000) ||
-                (player.getExperience()) == null || player.getExperience() < 0)
+        if (( player.getName().length() > 12 || player.getName().equals("")) ||
+                ( player.getTitle().length() > 30 || player.getTitle().equals("")) ||
+                ( player.getBirthday() < 0 ) ||
+                 player.getExperience() < 0 || player.getExperience() > 10_000_000)
             throw new Exception();
 
         if (player.getName() != null) entity.setName(player.getName());
@@ -170,6 +168,8 @@ public class PlayerService {
         if (player.getBirthday() != null) entity.setBirthday(new Date(player.getBirthday()));
         if (player.getBanned() != null) entity.setBanned(player.getBanned());
         if (player.getExperience() != null) {
+            entity.setExperience(player.getExperience());
+
             Integer level = (int) ((Math.sqrt(2500 + 200 * player.getExperience()) - 50) / 100);
             entity.setLevel(level);
 
