@@ -103,8 +103,8 @@ public class PlayerService {
 
     public PlayerEntity savePlayer(NewPlayer player) throws Exception {
 
-        if ((player.getName() == null || player.getName().length() > 12 || player.getName().equals("")) ||
-                (player.getTitle() == null || player.getTitle().length() > 30 || player.getTitle().equals("")) ||
+        if ((player.getName().isEmpty() || player.getName().length() > 12 ) ||
+                (player.getTitle().isEmpty() || player.getTitle().length() > 30 ) ||
                 (player.getRace() == null) ||
                 (player.getProfession() == null) ||
                 (player.getBirthday() == null || player.getBirthday() < 0) ||
@@ -155,19 +155,14 @@ public class PlayerService {
     public PlayerEntity updatePlayer(UpdatePlayer player, String id) throws Exception {
         PlayerEntity entity = getPlayer(id);
 
-        if (( player.getName().length() > 12 || player.getName().equals("")) ||
-                ( player.getTitle().length() > 30 || player.getTitle().equals("")) ||
-                ( player.getBirthday() < 0 ) ||
-                 player.getExperience() < 0 || player.getExperience() > 10_000_000)
-            throw new Exception();
-
-        if (player.getName() != null) entity.setName(player.getName());
-        if (player.getTitle() != null) entity.setTitle(player.getTitle());
+        if (!player.getName().isEmpty() && player.getName().length() > 12) entity.setName(player.getName());
+        if (!player.getTitle().isEmpty() && player.getTitle().length() > 30) entity.setTitle(player.getTitle());
         if (player.getRace() != null) entity.setRace(player.getRace());
         if (player.getProfession() != null) entity.setProfession(player.getProfession());
-        if (player.getBirthday() != null) entity.setBirthday(new Date(player.getBirthday()));
+        if (player.getBirthday() != null && player.getBirthday() < 0) entity.setBirthday(new Date(player.getBirthday()));
         if (player.getBanned() != null) entity.setBanned(player.getBanned());
-        if (player.getExperience() != null) {
+        if (player.getExperience() != null &&
+                (player.getExperience() < 0 || player.getExperience() > 10_000_000)) {
             entity.setExperience(player.getExperience());
 
             Integer level = (int) ((Math.sqrt(2500 + 200 * player.getExperience()) - 50) / 100);
